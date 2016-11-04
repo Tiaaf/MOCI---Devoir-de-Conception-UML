@@ -8,13 +8,13 @@ title = Initialisation
 
 activate Scolarité
 activate Application
-Scolarité->Application: InitYear()
+Scolarité->Application: initYear()
 
 
 Application-->BDD: askUsersStatus()
 activate BDD
 BDD->Application: getUsersStatus()
-Application-->BDD: UpdateYearBDD(Year)
+Application-->BDD: updateYearBDD(Year)
 BDD->Application: printSuccess()
 deactivate BDD
 Application-->Scolarité: printSuccess()
