@@ -82,7 +82,7 @@ activate Scolarité
 activate Application
 Application-->BDD: generateUID()
 Application<--BDD: printUID(UID)
-Application-->BDD: addUser(UID,firstName,lastName,type)
+Application-->BDD: addUser(UID,firstName,lastName)
 activate BDD
 BDD->Application: printSuccessCreation(UID) 
 deactivate BDD
