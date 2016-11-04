@@ -1,0 +1,92 @@
+@startuml
+actor Scolarité
+actor Utilisateur
+participant Application
+
+database BDD
+title = Initialisation
+
+activate Scolarité
+activate Application
+Scolarité->Application: InitYear()
+
+
+Application-->BDD: AskUsersStatus()
+activate BDD
+BDD->Application: getUsersStatus()
+Application-->BDD: UpdateYearBDD(Year)
+BDD->Application: printSuccess()
+deactivate BDD
+Application-->Scolarité: printSuccess()
+deactivate Scolarité
+
+Application-->Utilisateur: checkUpdate(UID)
+deactivate Application
+...
+
+Ref over Utilisateur,Application: Connexion
+
+    Utilisateur->Application: askStatus(UID)
+    
+    activate Utilisateur #grey
+    activate Application
+    activate Utilisateur #blue
+
+    Application-->BDD: askStatus(UID) 
+    activate BDD #red
+    activate BDD #yellow
+    BDD-->Application: getStatus(UID)
+    deactivate BDD 
+    Application-->Utilisateur: printStatus(UID)
+alt Statut exact
+    
+    Utilisateur->Application: validateStatus(UID)
+    deactivate Utilisateur #blue
+    Application-->BDD: updateStatus(UID)
+    deactivate BDD #red
+  
+else Statut inexact
+  Utilisateur->Application: refuseStatus(UID)
+
+  
+  loop Tant que statut inexact  
+    Application-->Utilisateur: askUpdateStatus(UID)
+    Utilisateur->Application: giveUpdateStatus(UID)
+    deactivate Utilisateur   #grey
+    Application-->BDD: updateStatus(UID)
+    deactivate BDD #yellow
+    Application-->Scolarité: printErrorStatus(UID)
+    deactivate Application
+    ...
+    Scolarité->Application: giveUpdateStatus(UID)
+    activate Application
+    activate Scolarité
+    
+    Application-->BDD: checkUpdateStatus(UID)
+    activate BDD
+    BDD->Application: printSuccessUpdate(UID)
+deactivate BDD
+    Application-->Scolarité: printSuccessUpdate(UID)
+deactivate Scolarité
+    
+    Application-->Utilisateur: checkUpdate(UID)
+    deactivate Application
+    ...
+end
+end
+
+...
+
+Scolarité->Application: addStudent(firstName,lastName)
+activate Scolarité
+activate Application
+Application-->BDD: generateUID()
+Application<--BDD: printUID(UID)
+Application-->BDD: addUser(UID,firstName,lastName,type)
+activate BDD
+BDD->Application: printSuccessCreation(UID) 
+deactivate BDD
+Application-->Scolarité: printSuccessCreation(UID)
+deactivate Application
+deactivate Scolarité
+@enduml
