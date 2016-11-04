@@ -11,7 +11,7 @@ activate Application
 Scolarité->Application: InitYear()
 
 
-Application-->BDD: AskUsersStatus()
+Application-->BDD: askUsersStatus()
 activate BDD
 BDD->Application: getUsersStatus()
 Application-->BDD: UpdateYearBDD(Year)
