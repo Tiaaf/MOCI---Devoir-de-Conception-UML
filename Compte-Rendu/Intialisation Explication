@@ -1,0 +1,7 @@
+Initialiser une nouvelle année consiste à mettre à jour le statut de tous les utilisateurs.
+Pour cela, chaque utilisateur a un champ "newYearInfos" qui spécifie leur statu pour l'année suivante selon qu'ils soient passés, qu'ils redoublent, qu'ils quittent l'école, etc.
+C'est la scolarité qui s'occupe de s'assurer que leur information sont bien à jour avant la date de migration.
+C'est l'administrateur système qui s'occupe d'initialiser la nouvelle année une fois la date prévue arrivée et le feu vert de la scolarité.
+
+--> utilisation du terme "user" au lieu de "student" : fonctions communes pour la modification ? toutes ou seulement certaines ?
+--> vérification des droits de l'utilisateur à modifier au moment de la connexion ou bien au moment de l'action effectuée (modification par exemple)?
