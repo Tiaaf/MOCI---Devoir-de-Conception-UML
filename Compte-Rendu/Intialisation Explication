@@ -5,3 +5,4 @@ C'est l'administrateur système qui s'occupe d'initialiser la nouvelle année un
 
 --> utilisation du terme "user" au lieu de "student" : fonctions communes pour la modification ? toutes ou seulement certaines ?
 --> vérification des droits de l'utilisateur à modifier au moment de la connexion ou bien au moment de l'action effectuée (modification par exemple)?
+--> préciser certaines fonctions dont le nom n'est pas forcément clair (updateStudentInterface() par exemple)
