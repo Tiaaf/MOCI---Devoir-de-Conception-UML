@@ -3,10 +3,10 @@ actor EducationDepartement as ED
 actor SystemAdministrator as SA
 participant Interface as I
 participant newYearManager as nYM
-participant year as y
 participant studentManager as  sM
-participant student as s
-database BDD
+database BDD_Student as SB
+
+title = Initialisation
 
 == Updating students'new year infos ==
 
@@ -16,23 +16,30 @@ ED -> I : updateStudentInterface()
 ED <- I : displayUpdateStudentInterface()
 
 loop until Education Departement user leaves update menu 
+  
+  alt the student 'next year status' has to be changed
 
-  ED -> I : studentInterface(studentID)
-  I -> sM : user = loadStudent(studentID)
-  sM -> BDD : loadStudent(studentID)
+    ED -> I : studentInterface(studentID)
+    activate sM
+    I -> sM : user = loadStudent(studentID)
+    sM -> SB : loadStudent(studentID)
+    deactivate sM
 
-  alt student doesn't exist
+    alt student doesn't exist
 
-    ED <- I : displayMessage("The student " + studentID + "doesn't exist)
+      ED <- I : displayMessage("The student " + studentID + "doesn't exist)
 
-  else student does exist
+    else student does exist
 
-    ED <- I : displayUpdateStudentInterface(user)
-    ED -> I : updateStudent(studentInfos)
-    I -> sM : updateStudent(studentID,studentInfos)
-    sM -> s : student = new student(studentID,studentInfos)
-    sM -> BDD : updateStudent(studentID,studentInfos)
-    ED <- I : displayMessage("The student " + userID + "has been updated")
+      ED <- I : displayUpdateStudentInterface(user)
+      ED -> I : updateStudent(studentInfos)
+      activate sM
+      I -> sM : updateStudent(studentID,studentInfos)
+      sM -> SB : updateStudent(studentID,studentInfos)
+      deactivate sM
+      ED <- I : displayMessage("The student " + userID + "has been updated")
+
+    end
 
   end
 
@@ -41,12 +48,10 @@ end
 deactivate I
 
 == Migration ==
+
 SA -> I : initYear()
 I -> nYM : initYear()
-nYM -> y : year = new year()
-
-loop for each student
+nYM -> SB : updateYear()
 
 
-nYM -> BDD :
 @enduml
