@@ -10,7 +10,7 @@ title = Initialisation
 
 
 
-ED -> I : openUpdateStudentInterface()
+ED -> I : openUpdateYearInterface()
 activate I
 I -> nYM : loadYear()
 activate nYM
@@ -20,7 +20,7 @@ SDB -> nYM : sendYearInfos()
 deactivate SDB
 nYM -> I : generateStudentList() 
 deactivate nYM
-ED <- I : displayUpdateStudentInterface()
+ED <- I : displayUpdateYearInterface()
 
 
   
