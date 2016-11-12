@@ -1,9 +1,7 @@
 @startuml
 actor EducationDepartement as ED
-actor SystemAdministrator as SA
 participant Interface as I
-participant newYearManager as nYM
-participant studentManager as  sM
+participant yearManager as nYM
 database Student_DB as SDB
 
 title = Initialisation
@@ -14,52 +12,43 @@ title = Initialisation
 
 ED -> I : openUpdateStudentInterface()
 activate I
+I -> nYM : loadYear()
+activate nYM
+nYM -> SDB : load()
+activate SDB
+SDB -> nYM : sendYearInfos()
+deactivate SDB
+nYM -> I : generateStudentList() 
+deactivate nYM
 ED <- I : displayUpdateStudentInterface()
 
-loop while !userLeft 
+
   
-  alt updateStatus
+  ED -> I : updateInfos(infos)
+  I -> nYM : updateInfos(infos)
+  activate nYM
+  nYM -> SDB : updateInfos(infos)
+  activate SDB
+  SDB -> nYM : updatingDone()
+  deactivate SDB
+  nYM -> I : updatingYearDone()
+  deactivate nYM
+  I -> ED : displayMessage("The year has been updated.")
 
-    ED -> I : studentInterface(studentID)
-   
-    I -> sM : user = loadStudent(studentID)
-     activate sM
-    sM -> SDB : loadStudent(studentID)
-    deactivate sM
-
-    alt !studentExists
-
-      ED <- I : displayMessage("The student " + studentID + "doesn't exist)
-
-    else studentExists
-      
-      ED <- I : displayUpdateStudentInterface(user)
-      ED -> I : updateStudent(studentInfos)
-      
-      I -> sM : updateStudent(studentID,studentInfos)
-      activate sM
-      sM -> SDB : updateStudent(studentID,studentInfos)
-      deactivate sM
-      I <- SDB : displayMessage("The student " + userID + "has been updated")
-      ED <- I : displayMessage("The student " + userID + "has been updated")
-      deactivate I
-    end
-
-  end
-
-end
 
 
 
 == Migration ==
 
-SA -> I : initYear()
-activate I
+ED -> I : initYear()
 I -> nYM : initYear()
 activate nYM
 nYM -> SDB : updateYear()
+activate SDB
+nYM <- SDB : updatingDone()
+deactivate SDB
+nYM -> I : initDone()
 deactivate nYM
-I <- SDB : displayMessage("The initialisation of the year is done")
-SA <- I : displayMessage("The initialisation of the year is done")
+ED <- I : displayMessage("The initialisation of the year is done")
 deactivate I
 @enduml
