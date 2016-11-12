@@ -33,7 +33,7 @@ ED <- I : displayUpdateStudentInterface()
   deactivate SDB
   nYM -> I : updatingYearDone()
   deactivate nYM
-  I -> ED : displayMessage("The year has been updated.")
+  I -> ED : displayMessage("The year's infos have been updated")
 
 
 
