@@ -4,7 +4,7 @@ actor SystemAdministrator as SA
 participant Interface as I
 participant newYearManager as nYM
 participant studentManager as  sM
-database Student_BDD as SB
+database Student_DB as SDB
 
 title = Initialisation
 
@@ -22,22 +22,22 @@ loop while !userLeft
     ED -> I : studentInterface(studentID)
     activate sM
     I -> sM : user = loadStudent(studentID)
-    sM -> SB : loadStudent(studentID)
+    sM -> SDB : loadStudent(studentID)
     deactivate sM
 
-    alt !studentExist
+    alt !studentExists
 
       ED <- I : displayMessage("The student " + studentID + "doesn't exist)
 
-    else studentExist
-
+    else studentExists
+      
       ED <- I : displayUpdateStudentInterface(user)
       ED -> I : updateStudent(studentInfos)
       activate sM
       I -> sM : updateStudent(studentID,studentInfos)
-      sM -> SB : updateStudent(studentID,studentInfos)
+      sM -> SDB : updateStudent(studentID,studentInfos)
       deactivate sM
-      I <- SB : displayMessage("The student " + userID + "has been updated")
+      I <- SDB : displayMessage("The student " + userID + "has been updated")
       ED <- I : displayMessage("The student " + userID + "has been updated")
 
     end
@@ -52,7 +52,7 @@ deactivate I
 
 SA -> I : initYear()
 I -> nYM : initYear()
-nYM -> SB : updateYear()
-I <- SB : displayMessage("The initialisation of the year is done")
-ED <- I : displayMessage("The initialisation of the year is done")
+nYM -> SDB : updateYear()
+I <- SDB : displayMessage("The initialisation of the year is done")
+SA <- I : displayMessage("The initialisation of the year is done")
 @enduml
