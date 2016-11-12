@@ -17,7 +17,20 @@ deactivate D
 I <- IS : generateIS(studentID)
 S <- I : displayInformationSheetInterface()
 
-loop While(!sheetComplete || !confirmation || !userLeft)
+opt
+
+  S -> I : validatePriorExperience()
+  I -> IS : validatePriorExperience(studentID)
+  IS -> D : validatePriorExperience(studentID)
+  activate D
+  D -> IS : updatingDone()
+  deactivate D
+  IS -> I : updatingDone()
+  I -> S : displayMessage("The update is done")
+  
+end 
+
+loop While(!sheetComplete || !confirmation )
 
   S -> I: updateInfos(infos)
   I->IS: updateInfos(infos, studentID)
@@ -51,4 +64,5 @@ loop While(!sheetComplete || !confirmation || !userLeft)
      end
   end
 end
+I -> Supervisor : notify("The student " + studentID + " has completed his information sheet", supervisorID)
 @enduml
