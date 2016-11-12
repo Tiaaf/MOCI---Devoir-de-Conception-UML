@@ -1,0 +1,42 @@
+@startuml
+actor Student as S
+participant Interface as I
+participant informationSheetManager as IS
+database Student_DB as D
+
+title = Filling the information sheet
+
+S -> I : openInformationSheetInterface()
+activate I
+S <- I : displayInformationSheetInterface()
+
+loop While(!sheetComplete || !confirmation)
+
+  S -> I: updateInfos(infos)
+  I->IS: updateInfos(infos, studentID)
+  activate IS
+  IS -> D : updateInfos(infos, studentID)
+  
+  alt !sheetComplete
+     IS -> I : ISNotComplete(studentID)
+     S <- I : displayMessage("The information sheet is not complete")
+  else sheetComplete
+     IS -> I: askConfirmation(studentID)
+     S <- I : askConfirmation()
+     alt confirmation
+         S -> I : confirmation()
+         I -> IS : confirmation(studentID)
+         IS -> D : creationOfDocuments(studentID,infos)
+         IS -> I : updatingDone(studentID)
+         S <- I : displayMessage("The information sheet has been updated")
+     else !confirmation
+         S -> I : refusal()
+         I -> IS : refusal(studentID)
+         I <- IS : askCompletion(studentID)
+         deactivate IS
+         S <- I : askCompletion()
+         deactivate I
+     end
+  end
+end
+@enduml
