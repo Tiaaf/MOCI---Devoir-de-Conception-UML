@@ -1,0 +1,33 @@
+@startuml
+state "En attente" as attente
+
+state "Non Validée" as non
+
+[*] --> attente
+attente -down-> fiche: Saisie des informations
+
+state "Fiche de renseignements" as fiche{
+    state "Fiche incomplète" as inc
+    state "Fiche complète" as comp
+    inc--> inc: Informations
+    inc--> comp: Complétion
+}
+
+fiche -down-> non: Demande de validation
+
+non --> non: Demande de complément
+non-left-> attente: Stage refusé
+non--> Convention: Stage validé
+
+state Convention{
+    state "Non signée" as uns
+    state "Première signature" as pre
+    state "Deuxième signature" as deux
+    state "Troisième signature" as trois
+    uns-->pre
+    pre-->deux
+    deux-->trois
+}
+
+Convention--> [*]
+@enduml
