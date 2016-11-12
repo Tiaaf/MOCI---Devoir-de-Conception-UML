@@ -5,7 +5,7 @@ participant informationSheetManager as iSM
 participant Student as St
 database Student_DB as SDB
 
-title = Decision Procedure
+title = Decision Making
 
 ref over St,Su,I,iSM,SDB : Information Sheet Input
 
