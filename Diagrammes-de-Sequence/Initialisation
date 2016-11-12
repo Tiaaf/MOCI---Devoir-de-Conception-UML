@@ -10,9 +10,10 @@ title = Initialisation
 
 == Updating students'infos ==
 
-activate I
+
 
 ED -> I : openUpdateStudentInterface()
+activate I
 ED <- I : displayUpdateStudentInterface()
 
 loop while !userLeft 
@@ -20,8 +21,9 @@ loop while !userLeft
   alt updateStatus
 
     ED -> I : studentInterface(studentID)
-    activate sM
+   
     I -> sM : user = loadStudent(studentID)
+     activate sM
     sM -> SDB : loadStudent(studentID)
     deactivate sM
 
@@ -33,26 +35,31 @@ loop while !userLeft
       
       ED <- I : displayUpdateStudentInterface(user)
       ED -> I : updateStudent(studentInfos)
-      activate sM
+      
       I -> sM : updateStudent(studentID,studentInfos)
+      activate sM
       sM -> SDB : updateStudent(studentID,studentInfos)
       deactivate sM
       I <- SDB : displayMessage("The student " + userID + "has been updated")
       ED <- I : displayMessage("The student " + userID + "has been updated")
-
+      deactivate I
     end
 
   end
 
 end
 
-deactivate I
+
 
 == Migration ==
 
 SA -> I : initYear()
+activate I
 I -> nYM : initYear()
+activate nYM
 nYM -> SDB : updateYear()
+deactivate nYM
 I <- SDB : displayMessage("The initialisation of the year is done")
 SA <- I : displayMessage("The initialisation of the year is done")
+deactivate I
 @enduml
