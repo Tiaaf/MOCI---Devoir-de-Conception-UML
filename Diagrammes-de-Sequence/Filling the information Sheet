@@ -10,12 +10,15 @@ S -> I : openInformationSheetInterface()
 activate I
 S <- I : displayInformationSheetInterface()
 
-loop While(!sheetComplete || !confirmation)
+loop While(!sheetComplete || !confirmation || !userLeft)
 
   S -> I: updateInfos(infos)
   I->IS: updateInfos(infos, studentID)
   activate IS
   IS -> D : updateInfos(infos, studentID)
+  activate D
+  D -> IS : updatingDone()
+  
   
   alt !sheetComplete
      IS -> I : ISNotComplete(studentID)
@@ -26,7 +29,9 @@ loop While(!sheetComplete || !confirmation)
      alt confirmation
          S -> I : confirmation()
          I -> IS : confirmation(studentID)
-         IS -> D : creationOfDocuments(studentID,infos)
+         IS -> D : updateInfos(confirmation, studentID)
+         D -> IS : updatingDone()
+         deactivate D
          IS -> I : updatingDone(studentID)
          S <- I : displayMessage("The information sheet has been updated")
      else !confirmation
