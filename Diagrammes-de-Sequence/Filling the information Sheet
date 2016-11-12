@@ -8,17 +8,23 @@ title = Filling the information sheet
 
 S -> I : openInformationSheetInterface()
 activate I
+I -> IS : loadIS(studentID)
+activate IS
+IS -> D : load(studentID)
+activate D
+IS <- D : sendInfos(studentID)
+deactivate D
+I <- IS : generateIS(studentID)
 S <- I : displayInformationSheetInterface()
 
 loop While(!sheetComplete || !confirmation || !userLeft)
 
   S -> I: updateInfos(infos)
   I->IS: updateInfos(infos, studentID)
-  activate IS
   IS -> D : updateInfos(infos, studentID)
   activate D
   D -> IS : updatingDone()
-  
+  deactivate D
   
   alt !sheetComplete
      IS -> I : ISNotComplete(studentID)
@@ -30,6 +36,7 @@ loop While(!sheetComplete || !confirmation || !userLeft)
          S -> I : confirmation()
          I -> IS : confirmation(studentID)
          IS -> D : updateInfos(confirmation, studentID)
+         activate D
          D -> IS : updatingDone()
          deactivate D
          IS -> I : updatingDone(studentID)
