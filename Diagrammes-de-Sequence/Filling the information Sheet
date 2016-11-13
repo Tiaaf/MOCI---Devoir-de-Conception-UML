@@ -43,29 +43,31 @@ loop While(!sheetComplete || !confirmation )
   
   alt !sheetComplete
      IS -> I : ISNotComplete(studentID)
-     S <- I : displayMessage("The information sheet is not complete")
+     S <- I : displayMessage("Please complete the informatiion sheet")
   else sheetComplete
      IS -> I: askConfirmation(studentID)
      S <- I : askConfirmation()
      alt confirmation
          S -> I : confirmation()
          I -> IS : confirmation(studentID)
-         IS -> D : updateInfos(confirmation, studentID)
+         IS -> D : confirmation(studentID)
          activate D
-         D -> D :  updateInfos(confirmation, studentID)
+         D -> D :  confirmation(studentID)
          D -> IS : updatingDone(studentID)
          deactivate D
          IS -> I : updatingDone(studentID)
          S <- I : displayMessage("The information sheet has been updated")
      else !confirmation
          S -> I : refusal()
-         I -> IS : refusal(studentID)
-         I <- IS : askCompletion(studentID)
+         I->IS : refusal(studentID)
+         IS -> I : ISNotComplete(studentID)
          deactivate IS
-         S <- I : askCompletion()
-         deactivate I
+         S <- I : displayMessage("Please complete the information sheet")
+
+         
      end
   end
 end
 I -> Supervisor : notify("The student " + studentID + " has completed his information sheet", supervisorID)
+deactivate I
 @enduml
