@@ -1,7 +1,207 @@
-EducationDepartement
-SystemAdministrator
-Interface
-newYearManager
-year
-studentManager
-student
+@startuml
+
+abstract class User{
+     ID: int
+     familyName: String
+     firstName: String
+}
+
+abstract class Student{
+    openInformationSheetInterface(): void
+    updateInfos(ArrayList <String>): void
+    confirmation(): void
+    refusal(): void
+}
+
+class FirstYear{
+    validatePriorExperience(): void
+}
+class SecondYear{
+     specializationID: int
+}
+class ThirdYear{
+     specializationID: int
+     foreign: boolean
+}
+
+Interface Interface{
+    loadIS(int): void
+}
+
+Class InformationSheetManager{
+     load(int): void
+     generateIS(int): void
+     validatePriorExperience(int): void
+     updatingDone(int): void
+     updateInfos(ArrayList <String>, int): void
+     ISNotComplete(int): void
+     askConfirmation(int): void
+     confirmation(int): void
+     notify(String,int): void
+     notify(String,String,int): void
+     loadValidationInterface(int): void
+     loadValidationInterface(int,int): void
+     generateStudentsListVI(int): void
+     generateISValidationInterface(int): void
+     reinitIS(int,int): void
+     reinitDone(int)
+}
+
+abstract class StudentInterface {
+      displayInformationSheetInterface(): void
+      displayMessage(String): void
+      updateInfos(ArrayList <String>, int): void
+      askConfirmation(): void
+      confirmation(int): void
+      refusal(int): void
+      askValidation(int,int): void
+    }
+
+class FirstYearInterface{
+    validatePriorExperience(int): void
+}
+
+package StudentDatabase <<Database>>{
+     class Student_DB{
+         sendInfos(int): void
+         sendInfosVI(int): void
+         sendInfos(int,int): void
+         sendYearInfos(): void
+         validatePriorExperience(int): void
+         updatingDone(int): void
+         updateInfos(ArrayList <String>, int): void
+         confirmation(int): void
+         reinitIS(int,int): void
+         deletingDone(): void
+         updatingDone():void
+         addingDone(): void
+         initDone(): void
+         deleteStudents(ArrayList <int>): void
+         updateStudents(ArrayList <UpdateTuple>): void
+         addStudents(ArrayList <AddTuple>): void
+         saveYear(): void
+         commitYearUpdate(): void
+    }
+}
+
+abstract class SupervisorInterface{
+     displayMessage(String): void
+     loadValidationInterface(int): void
+     loadValidationInterface(int,int): void
+     validation(int): void
+     completion(String,int): void
+     refusal(String,int,int): void
+}
+
+abstract class Supervisor{
+     openValidationInterface(): void
+     openValidationInterface(int): void
+     validation(int): void
+     completion(String,int): void
+     refusal(String,int): void
+}
+
+class EducationDepartment{
+    openUpdateYearInterface(): void
+    deleteStudents(ArrayList <Student> ): void
+    updateStudents(ArrayList <UpdateTuple>): void
+    addStudents(ArrayList <AddTuple>): void
+    initYear(): void
+}
+
+class EducationInterface{
+    loadYear(): void
+    deleteStudents(ArrayList <int>): void
+    updateStudents(ArrayList <UpdateTuple>): void
+    addStudents(ArrayList <AddTuple>): void
+    initYear(): void
+    displayMessage(String): void
+    displayUpdateYearInterface(): void
+}   
+
+class YearManager{
+    load(): void
+    deleteStudents(ArrayList <Student> ): void
+    updateStudents(ArrayList <UpdateTuple>): void
+    addStudents(ArrayList <AddTuple>): void
+    updateYear(): void
+    generateStudentList(): void
+    deletingDone(): void
+    updatingDone():void
+    addingDone(): void
+    initDone(): void
+}
+
+class UpdateTuple{
+    studentID: int
+    year: boolean
+    internship: boolean
+}
+
+class AddTuple{
+    studentID: int
+    studentInfos: ArrayList <String>
+}
+
+package MainDatabase <<Database>>{
+    class Main_DB{
+         saveDone(): void
+    }
+}
+
+User<|--Student
+
+Student<|-- FirstYear 
+Student<|-- SecondYear
+Student<|-- ThirdYear
+
+FirstYearInterface--|> StudentInterface
+SecondYearInterface--|> StudentInterface
+ThirdYearInterface--|> StudentInterface
+
+FirstYear "1"-- "1"FirstYearInterface
+SecondYear "1" -- "1" SecondYearInterface
+ThirdYear "1" -- "1" ThirdYearInterface
+
+InformationSheetManager "1" -- "n" SupervisorInterface
+InformationSheetManager "1" -- "n" StudentInterface
+InformationSheetManager "1" -- "1" Student_DB
+
+StudentInterface..|> Interface Interface
+
+User<|-- Supervisor
+
+Supervisor<|-- Director
+Supervisor<|-- YearSupervisor
+Supervisor<|-- InternshipSupervisor
+Supervisor<|-- SpecializationSupervisor
+
+Interface<|.. SupervisorInterface
+
+DirectorInterface --|> SupervisorInterface
+YearSupervisorInterface --|> SupervisorInterface
+InternshipSupervisorInterfcae --|> SupervisorInterface
+SpecializationSupervisorInterface --|> SupervisorInterface
+
+DirectorInterface "1" -up- "1" Director
+YearSupervisorInterface "1"-up-"1" YearSupervisor
+InternshipSupervisorInterfcae "1"-up-"1" InternshipSupervisor
+SpecializationSupervisorInterface "1"-up-"1" SpecializationSupervisor
+
+UpdateTuple "n"--"1" EducationDepartment
+UpdateTuple "n"--"1" EducationInterface
+UpdateTuple "n"--"1" Student_DB
+AddTuple "n"--"1" EducationDepartment
+AddTuple "n"--"1" EducationInterface
+AddTuple "n"--"1" Student_DB
+
+EducationInterface..|>Interface
+EducationDepartment "1" -- "1" EducationInterface
+
+User<|-- EducationDepartment
+
+YearManager "1"--"1" EducationInterface
+YearManager "1"--"1" Student_DB
+
+Main_DB "1"--"1" Student_DB
+@enduml
