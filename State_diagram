@@ -1,33 +1,40 @@
 @startuml
-state "En attente" as attente
+title = State diagram of internship procedure
 
-state "Non Validée" as non
+state Création : En attente de création de la fiche
+state "Non Validée" as non: En attente de décision des responsables
 
-[*] --> attente
-attente -down-> fiche: Saisie des informations
+[*] -right-> Création
+Création -down-> fiche: generateIS(studentID)
 
 state "Fiche de renseignements" as fiche{
-    state "Fiche incomplète" as inc
-    state "Fiche complète" as comp
-    inc--> inc: Informations
-    inc--> comp: Complétion
+    state "Fiche incomplète" as inc: Absence de certaine informations 
+    state "Fiche complète" as comp: Fiche en attente de confirmation
+    state "Fiche approuvée" as val: fiche complète et approuvée
+    inc--> inc: updateInfos(infos)
+    inc--> comp: updateInfos(infos)
+    comp-->val: confirmation()
+    comp-->inc:refusal()
 }
 
-fiche -down-> non: Demande de validation
+fiche -down-> non: askForValidation(studentID)
 
-non --> non: Demande de complément
-non-left-> attente: Stage refusé
-non--> Convention: Stage validé
+non --> fiche: completion(message)
+non-left-> Création: refusal(message)
+non-right-> Convention: validation()
 
 state Convention{
-    state "Non signée" as uns
-    state "Première signature" as pre
-    state "Deuxième signature" as deux
-    state "Troisième signature" as trois
-    uns-->pre
-    pre-->deux
-    deux-->trois
+    state "Non signée" as uns: En attente de la signature d'un des partis
+    state "Première signature" as pre :En attente de la signature d'un des partis 
+    state "Deuxième signature" as deux:En attente de la signature d'un des partis
+    state "Troisième signature" as trois: Convention complète et valide
+    uns-->pre:updateConvention(sign)
+    pre-->deux:updateConvention(sign)
+    deux-->trois:updateConvention(sign)
 }
+
+Convention---> Création: outOfDate()
+Convention--down>Convention: checkSigns()
 
 Convention--> [*]
 @enduml
