@@ -27,7 +27,7 @@ I -> nYM : deleteStudents(studentsIDList)
 activate nYM
 nYM -> SDB : deleteStudents(studentsIDList)
 activate SDB
-SDB -> SDB : commitUpdate()
+SDB -> SDB : deleteStudents(studentsIDList)
 SDB -> nYM : updatingDone()
 deactivate SDB
 nYM -> I : deletingDone()
@@ -43,7 +43,7 @@ I -> nYM : updateStudents([studentID, year, internship]+)
 activate nYM
 nYM -> SDB :updateStudents([studentID, year, internship]+)
 activate SDB
-SDB -> SDB : commitUpdate()
+SDB -> SDB : updateStudents([studentID, year, internship]+)
 SDB -> nYM : updatingDone()
 deactivate SDB
 nYM -> I : updatingDone()
@@ -59,7 +59,7 @@ I -> nYM : addStudents([studentID, studentInfos]+)
 activate nYM
 nYM -> SDB :addStudents([studentID, studentInfos]+)
 activate SDB
-SDB -> SDB : commitUpdate()
+SDB -> SDB : addStudents([studentID, studentInfos]+)
 SDB -> nYM : updatingDone()
 deactivate SDB
 nYM -> I : addingDone()
@@ -78,7 +78,7 @@ SDB -> MDB :  saveYear()
 activate MDB
 SDB <- MDB : saveDone()
 deactivate MDB
-SDB -> SDB : commitUpdate()
+SDB -> SDB : commitYearUpdate()
 nYM <- SDB : updatingDone()
 deactivate SDB
 nYM -> I : initDone()
