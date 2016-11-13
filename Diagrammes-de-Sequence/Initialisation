@@ -6,9 +6,6 @@ database Student_DB as SDB
 
 title = Initialisation
 
-== Updating students'infos ==
-
-
 
 ED -> I : openUpdateYearInterface()
 activate I
@@ -22,20 +19,49 @@ nYM -> I : generateStudentList()
 deactivate nYM
 ED <- I : displayUpdateYearInterface()
 
+== Deleting students ==
 
-  
-  ED -> I : updateInfos(infos)
-  I -> nYM : updateInfos(infos)
-  activate nYM
-  nYM -> SDB : updateInfos(infos)
-  activate SDB
-  SDB -> nYM : updatingDone()
-  deactivate SDB
-  nYM -> I : updatingYearDone()
-  deactivate nYM
-  I -> ED : displayMessage("The year's infos have been updated")
+opt
+ED -> I : deleteStudents(studentsIDList)
+I -> nYM : deleteStudents(studentsIDList)
+activate nYM
+nYM -> SDB : deleteStudents(studentsIDList)
+activate SDB
+SDB -> nYM : updatingDone()
+deactivate SDB
+nYM -> I : deletingDone()
+deactivate nYM
+I -> ED : displayMessage("The students have been deleted")
+end
+
+== Updating students ==
+
+opt
+ED -> I : updateStudents([studentID, studentInfos]+)
+I -> nYM : updateStudents([studentID, studentInfos]+)
+activate nYM
+nYM -> SDB :updateStudents([studentID, studentInfos]+)
+activate SDB
+SDB -> nYM : updatingDone()
+deactivate SDB
+nYM -> I : updatingDone()
+deactivate nYM
+I -> ED : displayMessage("The students have been updated")
+end
+ 
+== Adding students ==
 
 
+ED -> I : addStudents([studentID, studentInfos]+)
+I -> nYM : addStudents([studentID, studentInfos]+)
+activate nYM
+nYM -> SDB :addStudents([studentID, studentInfos]+)
+activate SDB
+SDB -> nYM : updatingDone()
+deactivate SDB
+nYM -> I : addingDone()
+deactivate nYM
+I -> ED : displayMessage("The students have been added")
 
 
 == Migration ==
