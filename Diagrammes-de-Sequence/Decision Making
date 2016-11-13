@@ -37,10 +37,17 @@ else  refusal
 
   Su -> I : refusal(message)
   I -> iSM : refusal(message,studentID)
-  deactivate I
+  
   iSM -> St : notify("Information sheet refused",message,studentID)
   iSM -> SDB : reinitInformationSheet(studentID)
+  activate SDB
+  SDB -> SDB : commitUpdate()
+  SDB -> iSM : updatingDone()
+  deactivate SDB
+  iSM -> I : reinitDone()
   deactivate iSM
+  I -> Su : displayMessage("The refusal has been taken into account")
+  deactivate I
 
 end
 @enduml
