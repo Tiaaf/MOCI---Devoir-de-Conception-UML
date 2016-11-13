@@ -1,53 +1,63 @@
 @startuml
 actor Supervisor as Su
-participant Interface as I
-participant informationSheetManager as iSM
-participant Student as St
+participant SupervisorInterface as I
+participant InformationSheetManager as iSM
+participant StudentInterface as St
 database Student_DB as SDB
 
 title = Decision Making
 
-ref over St,Su,I,iSM,SDB : Filling the information sheet
-
+ref over Su, SDB : Filling the information sheet
+activate Su
 Su <- I : displayMessage("The student " + studentID + "has completed its information sheet")
 activate I
-Su -> I : openValidationInterface(studentID)
-I -> iSM : loadIS(studentID)
+Su -> I : openValidationInterface()
+I -> iSM : loadValidationInterface(supervisorID)
 activate iSM
-iSM -> SDB : load(studentID)
+iSM -> SDB : loadValidationInterface(supervisorID)
 activate SDB
-iSM <- SDB : sendInfos(studentID)
+iSM <- SDB : sendInfosVI(supervisorID)
 deactivate SDB
-I <- iSM : generateIS(studentID)
+I <- iSM : generateStudentsListVI(supervisorID)
+Su <- I : displayValidationInterface()
+
+Su -> I : openValidationInterface(studentID)
+I -> iSM : loadValidationInterface(supervisorID,studentID)
+iSM -> SDB : loadValidationIterface(supervisorID,studentID)
+activate SDB
+iSM <- SDB : sendInfos(supervisorID,studentID)
+deactivate SDB
+I <- iSM : generateISValidationInterface(studentID)
 Su <- I : displayValidationInterface(studentID)
 
 alt  validation
   
-  Su -> I : validation()
+  Su -> I : validation(studentID)
   I -> iSM : validation(studentID)
   iSM -> St : notify("Information sheet validated", studentID)
 
 else  completion
 
-  Su -> I : completion(message)
+  Su -> I : completion(message,studentID)
   I -> iSM : completion(message,studentID)
   iSM -> St : notify("Information sheet has to be completed",message,studentID)
 
 else  refusal
 
-  Su -> I : refusal(message)
-  I -> iSM : refusal(message,studentID)
+  Su -> I : refusal(message,studentID)
+  I -> iSM : refusal(message,supervisorID,studentID)
   
   iSM -> St : notify("Information sheet refused",message,studentID)
-  iSM -> SDB : reinitIS(studentID)
+  iSM -> SDB : reinitIS(supervisorID,studentID)
   activate SDB
-  SDB -> SDB : reinitIS(studentID)
-  SDB -> iSM : updatingDone()
+  SDB -> SDB : reinitIS(supervisorID,studentID)
+  SDB -> iSM : updatingDone(supervisorID)
   deactivate SDB
-  iSM -> I : reinitDone()
+  iSM -> I : reinitDone(supervisorID)
   deactivate iSM
   I -> Su : displayMessage("The refusal has been taken into account")
   deactivate I
 
 end
+deactivate Su
 @enduml
