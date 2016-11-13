@@ -17,7 +17,7 @@ state "Fiche de renseignements" as fiche{
     comp-->inc:refusal()
 }
 
-fiche -down-> non: askForValidation(studentID)
+fiche -down-> non: askValidation(studentID)
 
 non --> fiche: completion(message)
 non-left-> Création: refusal(message)
