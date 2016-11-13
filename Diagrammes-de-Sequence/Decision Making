@@ -7,18 +7,24 @@ database Student_DB as SDB
 
 title = Decision Making
 
-ref over St,Su,I,iSM,SDB : Information Sheet Input
+ref over St,Su,I,iSM,SDB : Filling the information sheet
 
 Su <- I : displayMessage("The student " + studentID + "has completed its information sheet")
 activate I
 Su -> I : openValidationInterface(studentID)
+I -> iSM : loadIS(studentID)
+activate iSM
+iSM -> SDB : load(studentID)
+activate SDB
+iSM <- SDB : sendInfos(studentID)
+deactivate SDB
+I <- iSM : generateIS(studentID)
 Su <- I : displayValidationInterface(studentID)
 
 alt  validation
   
   Su -> I : validation()
   I -> iSM : validation(studentID)
-  activate iSM
   iSM -> St : notify("Information sheet validated", studentID)
 
 else  completion
