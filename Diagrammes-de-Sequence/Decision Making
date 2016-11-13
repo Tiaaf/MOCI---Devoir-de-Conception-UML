@@ -39,9 +39,9 @@ else  refusal
   I -> iSM : refusal(message,studentID)
   
   iSM -> St : notify("Information sheet refused",message,studentID)
-  iSM -> SDB : reinitInformationSheet(studentID)
+  iSM -> SDB : reinitIS(studentID)
   activate SDB
-  SDB -> SDB : commitUpdate()
+  SDB -> SDB : reinitIS(studentID)
   SDB -> iSM : updatingDone()
   deactivate SDB
   iSM -> I : reinitDone()
