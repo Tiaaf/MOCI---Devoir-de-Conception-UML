@@ -37,10 +37,10 @@ end
 == Updating students ==
 
 opt
-ED -> I : updateStudents([studentID, studentInfos]+)
-I -> nYM : updateStudents([studentID, studentInfos]+)
+ED -> I : updateStudents([studentID, year, internship]+)
+I -> nYM : updateStudents([studentID, year, internship]+)
 activate nYM
-nYM -> SDB :updateStudents([studentID, studentInfos]+)
+nYM -> SDB :updateStudents([studentID, year, internship]+)
 activate SDB
 SDB -> nYM : updatingDone()
 deactivate SDB
