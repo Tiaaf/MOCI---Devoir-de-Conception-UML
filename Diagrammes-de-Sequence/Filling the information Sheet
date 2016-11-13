@@ -23,7 +23,7 @@ opt
   I -> IS : validatePriorExperience(studentID)
   IS -> D : validatePriorExperience(studentID)
   activate D
-  D -> D : commitUpdate()
+  D -> D : validatePriorExperience(studentID)
   D -> IS : updatingDone()
   deactivate D
   IS -> I : updatingDone()
@@ -37,7 +37,7 @@ loop While(!sheetComplete || !confirmation )
   I->IS: updateInfos(infos, studentID)
   IS -> D : updateInfos(infos, studentID)
   activate D
-  D -> D : commitUpdate()
+  D -> D :  updateInfos(infos, studentID)
   D -> IS : updatingDone()
   deactivate D
   
@@ -52,7 +52,7 @@ loop While(!sheetComplete || !confirmation )
          I -> IS : confirmation(studentID)
          IS -> D : updateInfos(confirmation, studentID)
          activate D
-         D -> D : commitUpdate()
+         D -> D :  updateInfos(confirmation, studentID)
          D -> IS : updatingDone()
          deactivate D
          IS -> I : updatingDone(studentID)
