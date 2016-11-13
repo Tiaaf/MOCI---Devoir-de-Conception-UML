@@ -24,9 +24,9 @@ opt
   IS -> D : validatePriorExperience(studentID)
   activate D
   D -> D : validatePriorExperience(studentID)
-  D -> IS : updatingDone()
+  D -> IS : updatingDone(studentID)
   deactivate D
-  IS -> I : updatingDone()
+  IS -> I : updatingDone(studentID)
   I -> S : displayMessage("The update is done")
   
 end 
@@ -38,7 +38,7 @@ loop While(!sheetComplete || !confirmation )
   IS -> D : updateInfos(infos, studentID)
   activate D
   D -> D :  updateInfos(infos, studentID)
-  D -> IS : updatingDone()
+  D -> IS : updatingDone(studentID)
   deactivate D
   
   alt !sheetComplete
@@ -53,7 +53,7 @@ loop While(!sheetComplete || !confirmation )
          IS -> D : updateInfos(confirmation, studentID)
          activate D
          D -> D :  updateInfos(confirmation, studentID)
-         D -> IS : updatingDone()
+         D -> IS : updatingDone(studentID)
          deactivate D
          IS -> I : updatingDone(studentID)
          S <- I : displayMessage("The information sheet has been updated")
