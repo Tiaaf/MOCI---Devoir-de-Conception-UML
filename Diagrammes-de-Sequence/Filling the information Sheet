@@ -1,7 +1,7 @@
 @startuml
 actor Student as S
-participant Interface as I
-participant informationSheetManager as IS
+participant StudentInterface as I
+participant InformationSheetManager as IS
 database Student_DB as D
 
 title = Filling the information sheet
