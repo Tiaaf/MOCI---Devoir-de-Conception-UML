@@ -61,13 +61,14 @@ loop While(!sheetComplete || !confirmation )
          S -> I : refusal()
          I->IS : refusal(studentID)
          IS -> I : ISNotComplete(studentID)
-         deactivate IS
          S <- I : displayMessage("Please complete the information sheet")
 
          
      end
   end
 end
-I -> Supervisor : notify("The student " + studentID + " has completed his information sheet", supervisorID)
+I -> IS : askValidation(supervisorID,studentID)
 deactivate I
+IS -> SupervisorInterface : notify("The student " + studentID + " has completed its information sheet", supervisorID)
+deactivate IS
 @enduml
