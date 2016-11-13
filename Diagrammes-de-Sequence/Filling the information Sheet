@@ -5,8 +5,9 @@ participant InformationSheetManager as IS
 database Student_DB as D
 
 title = Filling the information sheet
-
+activate S
 S -> I : openInformationSheetInterface()
+
 activate I
 I -> IS : loadIS(studentID)
 activate IS
@@ -71,4 +72,5 @@ I -> IS : askValidation(supervisorID,studentID)
 deactivate I
 IS -> SupervisorInterface : notify("The student " + studentID + " has completed its information sheet", supervisorID)
 deactivate IS
+deactivate S
 @enduml
