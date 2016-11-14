@@ -1,12 +1,12 @@
 @startuml
 actor EducationDepartement as ED
-participant Interface as I
-participant yearManager as nYM
+participant EducationInterface as I
+participant YearManager as nYM
 database Student_DB as SDB
 database Main_DB as MDB
 title = Initialisation
 
-
+activate ED
 ED -> I : openUpdateYearInterface()
 activate I
 I -> nYM : loadYear()
@@ -28,7 +28,7 @@ activate nYM
 nYM -> SDB : deleteStudents(studentsIDList)
 activate SDB
 SDB -> SDB : deleteStudents(studentsIDList)
-SDB -> nYM : updatingDone()
+SDB -> nYM : deletingDone()
 deactivate SDB
 nYM -> I : deletingDone()
 deactivate nYM
@@ -60,7 +60,7 @@ activate nYM
 nYM -> SDB :addStudents([studentID, studentInfos]+)
 activate SDB
 SDB -> SDB : addStudents([studentID, studentInfos]+)
-SDB -> nYM : updatingDone()
+SDB -> nYM : addingDone()
 deactivate SDB
 nYM -> I : addingDone()
 deactivate nYM
@@ -79,10 +79,12 @@ activate MDB
 SDB <- MDB : saveDone()
 deactivate MDB
 SDB -> SDB : commitYearUpdate()
-nYM <- SDB : updatingDone()
+nYM <- SDB : initDone()
 deactivate SDB
 nYM -> I : initDone()
 deactivate nYM
 ED <- I : displayMessage("The initialisation of the year is done")
 deactivate I
+
+deactivate ED
 @enduml
